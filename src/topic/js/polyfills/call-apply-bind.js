@@ -19,10 +19,25 @@
   };
 
 //   Polyfill of apply 
-Function.prototype.myApply = function(context = {}, args) {
+Function.prototype.myApply = function(context = {}, args = []) {
     if(typeof this !== "function") {
         throw new Error(this + "It's not callable");
+    }
+
+    if(!Array.isArray(args)) {
+      throw new TypeError("CreateListFromArray like called on non-object");
     }
     context.fn = this;
     context.fn(...args)
 }
+
+// Polyfill of bind
+  Function.prototype.myBind = function(context = {}, ...args) {
+    if(typeof this !== "function") {
+      throw new Error(this + "cannot be bound as it's not callable");
+    }
+    context.fn = this;
+    return function(...newArgs) {
+      return context.fn(...args, ...newArgs)
+    }
+  }
